@@ -1,0 +1,37 @@
+<script src= 'http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
+<script>
+    $(document).ready(function(){
+        $('#registerRequest').click(function(){
+            $.ajax({
+                url: "/register"
+            })
+            .done(function(res){
+                $('#loginOrRegistrationForm').html(res)
+            })
+        })
+        $('#login').click(function(){
+            var data = $('#loginForm').serialize()
+            $.ajax({
+                method: "POST",
+                url: "/login_user",
+                data: data
+            })
+            .done(function(res){
+                console.log(data)
+                if(res == "success"){
+                    window.location.href = '/dashboard'
+                }
+                $('#error_container').html(res)
+            })
+        })
+    })
+</script>
+
+<h1>Login.</h1>
+<form action="#" method="post" id="loginForm">
+    <input type="text" name="username" placeholder="username">
+    <input type="text" name="password" placeholder="password">
+    <a href="#" id="login">Submit.</a>
+</form>
+<p><a href="#" id="registerRequest">new to Sugar?</a></p>
+<div id="error_container"></div>

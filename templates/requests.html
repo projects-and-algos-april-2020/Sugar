@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sugar</title>
+    <script src= 'http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
+    <script>
+        $(document).ready(function(){
+            $('.item_list').click(function(){
+                var category_name = $(this).html()
+                var data = {"category": category_name}
+                console.log(data)
+                $.ajax({
+                    method: "post",
+                    url: "/item_list",
+                    data: data
+                })
+                .done(function(res){
+                    $('#form_container').html(res)
+                })
+            })
+        })
+    </script>
+</head>
+<body>
+    <div id="container">
+        <h1>{{session.username}}</h1>
+        <p>profile picture placeholder</p>
+        <p>Request an Item</p>
+        <ul>
+            {% for category in categories%}
+            <li>
+            <form action="" method="post" class="categories">
+            <input type="hidden" name="category_id" value="{{category.id}}">
+            <label for="category_id"><a href="#" class="item_list">{{category.name}}</a></label>
+            </form>
+            </li>
+            {% endfor %}
+        </ul>
+        <div id="form_container">
+            <form action="" id="request_form" method="post">
+                <select>
+                    <option selected disabled>Select a category</option>
+                </select>
+                <input type="hidden" name="user_id" value="{{session.user_id}}">
+                <p>Submit.</p>
+            </form>
+            <div id="error_container">
+            </div>
+        </div>
+        
+
+        <div id="user_request_list">
+            list of user requests placeholder
+        </div>
+
+    </div>
+</body>
+</html>

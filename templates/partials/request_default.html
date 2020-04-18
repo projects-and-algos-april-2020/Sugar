@@ -1,0 +1,49 @@
+<script src= 'http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
+<script>
+    $(document).ready(function(){
+        $('#medicine').click(function(){
+            $.ajax({
+                url: "/medicine_item_list"
+            })
+            .done(function(res){
+                $('#items_in_category').html(res)
+            })
+        })
+        $('#kitchen').click(function(){
+            $.ajax({
+                url: "/kitchen_item_list"
+            })
+            .done(function(res){
+                $('#items_in_category').html(res)
+            })
+        })
+        $('#bath').click(function(){
+            $.ajax({
+                url: "/bath_item_list"
+            })
+            .done(function(res){
+                $('#items_in_category').html(res)
+            })
+        })
+        $('#other').click(function(){
+            $.ajax({
+                url: "/other_item_list"
+            })
+            .done(function(res){
+                $('#items_in_category').html(res)
+            })
+        })
+    })
+</script>
+
+    <p>Request an Item</p>
+    <ul>
+        {% for category in categories%}
+        <li><a href="#" id={{category.name}}>{{category.name}}</a></li>
+        {% endfor %}
+        <select id="items_in_category">
+            <option selected disabled>Select a category</option>
+        </select>
+    </ul>
+
+    

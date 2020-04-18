@@ -1,0 +1,29 @@
+<script src= 'http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
+<script>
+    $('#submit_request').click(function(){
+        var data = $('#request_form').serialize()
+        $.ajax({
+            method: "POST",
+            url: "/create_request",
+            data: data
+        })
+        .done(function(res){
+            if(res == "success"){
+                    window.location.href = '/request'
+                } else {
+            $('#error_container').html(res)
+            }
+        })
+    })
+</script>
+<form action="" id="request_form" method="post">
+    <select>
+        <option selected disabled>Select an item</option>
+        {% for item in category_items %}
+        <option name="item_id" value="{{item.id}}">{{item.name}}</option>
+        {% endfor %}
+    </select>
+    <input type="hidden" name="user_id" value="{{session.user_id}}">
+    <p><a href="#" id="submit_request">Submit.</a></p>
+</form>
+<div id="error_container"></div>
