@@ -1,7 +1,8 @@
 <script src= 'http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
 <script>
+
     $('#submit_request').click(function(){
-        var data = $('#request_form').serialize()
+        var data = $('#item_request_form').serialize()
         $.ajax({
             method: "POST",
             url: "/create_request",
@@ -16,13 +17,14 @@
         })
     })
 </script>
-<form action="" id="request_form" method="post">
-    <select>
-        <option selected disabled>Select an item</option>
+<form action="" id="item_request_form" method="post">
+    <select name="item_id">
+        <option selected value="0">Select an item</option>
         {% for item in category_items %}
         <option name="item_id" value="{{item.id}}">{{item.name}}</option>
         {% endfor %}
     </select>
+    <p><textarea name="message" id="" cols="30" rows="3" placeholder="write a short message!" style="resize:none"></textarea></p>
     <input type="hidden" name="user_id" value="{{session.user_id}}">
     <p><a href="#" id="submit_request">Submit.</a></p>
 </form>

@@ -1,6 +1,6 @@
 from flask import render_template, redirect, request, session, flash, session
 from config import db, bcrypt, migrate
-from models import Users, Categories, Items, requests
+from models import Users, Categories, Items, Requests
 
 def index():
     return render_template('index.html')
@@ -42,22 +42,20 @@ def item_list():
     return render_template('partials/items_form.html', category_items=category_items)
 
 def user_request():
+    user = Users.query.get(session['user_id'])
+    user_requests = Requests.query.join(Requests.item).join(Requests.user).filter_by(id=session['user_id']).all()
+    print(user_requests)
     categories = Categories.display_categories()
-    return render_template('requests.html', categories=categories)
-
-def create_request2():
-    print(request.form)
-    valid = Requests.submit_request(request.form)
-    if not valid:
-        return redirect('/request')
-    else:
-        Requests.new_request(request.form)
-        return redirect('/request')
+    return render_template('requests.html', categories=categories, user_requests=user_requests)
 
 def create_request():
     print(request.form)
-    new_request = Users.create_request(request.form)
-    return redirect('/request')
+    valid = Requests.submit_request(request.form)
+    if not valid:
+        return render_template('partials/errors.html')
+    else:
+        Requests.add_request(request.form)
+        return "success"
 
 def user_request_list():
     return render_template('partials/user_request_list.html')

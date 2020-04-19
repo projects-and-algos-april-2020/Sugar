@@ -6,11 +6,6 @@ import re
 EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$')
 INVALID_PASSWORD_REGEX = re.compile(r'^([^0-9]*|[^A-Z]*)$')
 
-requests = db.Table("requests",
-    db.Column("user_id", db.Integer, db.ForeignKey("users.id", ondelete="cascade"), primary_key=True),
-    db.Column("item_id", db.Integer, db.ForeignKey("items.id", ondelete="cascade"), primary_key=True))
-
-
 class Users(db.Model):
     __tablename__="users"
     id=db.Column(db.Integer, primary_key=True)
@@ -19,16 +14,9 @@ class Users(db.Model):
     password_hash=db.Column(db.String(255))
     created_at=db.Column(db.DateTime, server_default=func.now())
     updated_at=db.Column(db.DateTime, server_default=func.now(), onupdate=func.now())
-    user_reqeusts = db.relationship("Items",
-    secondary=requests,
-    passive_deletes=True)
-    @classmethod
-    def create_request(cls, data):
-        user = Users.query.get(data["user_Pd"])
-        item = Items.query.get(data["item_id"])
-        user.user_reqeusts.append(item)
-        db.session.commit()
-
+    user_requests = db.relationship("Requests",
+        back_populates="user",
+        cascade="all, delete, delete-orphan")
     @classmethod
     def validate_user(cls, data):
         valid = True
@@ -107,6 +95,41 @@ class Items(db.Model):
         foreign_keys=[category_id],
         backref="posts",
         cascade="all")
+    item_requests = db.relationship("Requests",
+        back_populates="item",
+        cascade="all, delete, delete-orphan")
 
-
-
+class Requests(db.Model):
+    __tablename__="requests"
+    id=db.Column(db.Integer, primary_key=True)
+    user_id=db.Column(db.Integer,
+        db.ForeignKey("users.id", ondelete="cascade"),
+        nullable=False)
+    user = db.relationship("Users",
+        foreign_keys=[user_id],
+        backref="requests",
+        cascade="all")
+    item_id = db.Column(db.Integer, 
+        db.ForeignKey("items.id", 
+        ondelete="cascade"), 
+        nullable=False)
+    item = db.relationship("Items",
+        foreign_keys=[item_id],
+        backref="requests",
+        cascade="all")
+    message = db.Column(db.String(255))
+    @classmethod
+    def submit_request(cls, data):
+        valid=True
+        if int(data["item_id"])<1:
+            valid=False
+            flash("an item must be selected to make request!")
+        return valid
+    @classmethod
+    def add_request(cls, data):
+        new_request = cls(
+            user_id=data["user_id"],
+            item_id=data["item_id"],
+            message=data["message"])
+        db.session.add(new_request)
+        db.session.commit()

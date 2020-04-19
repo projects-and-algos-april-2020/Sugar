@@ -41,9 +41,9 @@
         <div id="form_container">
             <form action="" id="request_form" method="post">
                 <select>
-                    <option selected disabled>Select a category</option>
+                    <option selected disabled>           </option>
                 </select>
-                <input type="hidden" name="user_id" value="{{session.user_id}}">
+                <p><textarea name="" id="" cols="30" rows="3" placeholder="select a category!" style="resize:none"></textarea></p>
                 <p>Submit.</p>
             </form>
             <div id="error_container">
@@ -52,7 +52,12 @@
         
 
         <div id="user_request_list">
-            list of user requests placeholder
+            <h1>your current requests!</h1>
+            {% for request in user_requests %}
+            <p>{{request.item.name}}</p>
+            <p>{{request.message}}</p>
+            <hr>
+            {% endfor %}
         </div>
 
     </div>
