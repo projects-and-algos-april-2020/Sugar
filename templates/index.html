@@ -14,10 +14,369 @@
             })
         })
     </script>
+    <style>
+        :root {
+        --main-color: rgb(255,0,102);
+        }
+
+        * {
+            padding: 0;
+            margin: 0;
+            font-family: helvetica;
+        }
+        body {
+            background-color: black;
+        }
+        
+        .title {
+            position: absolute;
+            right: 3vw;
+            font-weight: bold;
+            font-style: italic;
+            color: var(--main-color);
+            font-size: 11em;
+            z-index: 0;
+        }
+        .page-wrap {
+            background-image: url('static/images/background.jpg');
+            background-position: center center;
+            background-size: 100% auto;
+            width: 100%;
+            height: 100vh;
+            display: grid;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        .swiper-image-one {
+            background-image: url('static/images/dr_jonas_salk.jpg');
+        }
+        .swiper-image-two {
+            background-image: url('static/images/young_bill_gates.jpg');
+        }
+        .swiper-image-three {
+            background-image: url('static/images/oprah_winfrey.jpg');
+        }
+
+        .swiper-image-inner {
+            background-size: 50vh;
+            background-position: right center;
+            background-repeat: no-repeat;
+            height:70vh;
+        }
+        .swiper-image-left-one-header {
+            color: var(--main-color);
+            font-style: italic;
+            position: absolute;
+            left:0;
+            padding-left: 5px;
+            top: 64vh;
+            padding-right: 2vw;
+            opacity: 0;
+            transition: all 1.5s cubic-bezier(0.215, 0.61, 0.355, 1) 1.0s;
+            transform: translate3d(-20%, 0, 0);
+        }
+        .swiper-image-inner-border {
+            position: absolute;
+            height: 71vh;
+            width: 30vw;
+            border: 1px solid bisque;
+            z-index: -1;
+        }
+        .swiper-image-left-one {
+            color: var(--main-color);
+            position: absolute;
+            top: 67.5vh;
+            line-height: 0.9em;
+            padding-left: 5px;
+            font-style:italic;
+        }
+        .swiper-image-right-one {
+            position: absolute;
+            left:0;
+            top: 3.8vh;
+            line-height: 0.9em;
+            padding-left: 5px;
+        }
+        .other-quote {
+            color: bisque;
+            opacity: 0;
+            transition: all .9s cubic-bezier(0.215, 0.61, 0.355, 1) 1.4s;
+            transform: translate3d(-20%, 0, 0);
+        }
+        .main-quote {
+            color: var(--main-color);
+            font-style: italic;
+            font-weight: bold;
+            font-size: 1.3rem;
+            opacity: 0;
+            transition: all 1.5s cubic-bezier(0.215, 0.61, 0.355, 1) 1.0s;
+            transform: translate3d(-20%, 0, 0);
+        }
+        .line-two {
+            padding-left: 47px;
+        }
+        .line-four {
+            padding-left: 70px;
+        }
+        .line-five {
+            padding-left: 100px;
+        }
+        .swiper-image-left-two-header {
+            color: var(--main-color);
+            font-style: italic;
+            position: absolute;
+            top: 59vh;
+            left:22.6vh;
+            padding-left: 5px;
+            padding-right: 2vw;
+            opacity: 0;
+            transition: all 1.5s cubic-bezier(0.215, 0.61, 0.355, 1) 1.0s;
+            transform: translate3d(-20%, 0, 0);
+        }
+        .swiper-image-left-two {
+            color: bisque;
+            position: absolute;
+            top: 63vh;
+            left: 10vw;
+            line-height: 0.9em;
+            padding-left: 5px;
+            font-style:italic;
+        }
+        .swiper-image-inner-border-two {
+            position: absolute;
+            top: 30vh;
+            left: 45vh;
+            margin: 0 auto;
+            height: 900px;
+            width: 500px;
+            border: 1px solid bisque;
+            z-index: -1;
+        }
+        .swiper-image-right-two {
+            color: var(--main-color);
+            position: absolute;
+            top: 20vh;
+            line-height: 0.9em;
+            padding-left: 5px;
+            font-style:italic;
+        }
+        .swiper-image-left-three-header {
+            color: var(--main-color);
+            font-style: italic;
+            position: absolute;
+            top: 4.0vh;
+            right:0vh;
+            opacity: 0;
+            transition: all 1.5s cubic-bezier(0.215, 0.61, 0.355, 1) 1.0s;
+            transform: translate3d(-20%, 0, 0);
+        }
+        .swiper-image-inner-border-three {
+            position: absolute;
+            top: 0;
+            height: 500px;
+            width: 700px;
+            border: 1px solid bisque;
+            z-index: -1;
+        }
+        .swiper-image-right-three {
+            color: var(--main-color);
+            position: absolute;
+            top: 20vh;
+            line-height: 0.9em;
+            padding-left: 5px;
+            font-style:italic;
+        }
+        .line-six, .line-seven {
+            color: bisque;
+        }
+        .line-eight {
+            font-size: 3rem;
+            padding-left: 20px;
+            color: var(--main-color);
+            font-weight: bold;
+        }
+
+        .swiper-slide.swiper-slide-active .swiper-image-left-one-header,
+        .swiper-slide.swiper-slide-active .other-quote,
+        .swiper-slide.swiper-slide-active .main-quote,
+        .swiper-slide.swiper-slide-active .swiper-image-left-two-header,
+        .swiper-slide.swiper-slide-active .swiper-image-left-three-header,
+        .swiper-slide-swiper-slide-active .line-eight {
+            transform: translate3d(0, 0, 0);
+            opacity: 1;
+        }
+
+        .home-slider {
+            height: 65vh;
+            width: 90vw;
+            position: relative;
+        }
+        .swiper-container {
+            height: 100vh;
+            width: 90vw;
+            margin-left: auto;
+            margin-right: auto;
+            position: relative;
+            /* Fix of Webkit flickering */
+            z-index: 1;
+        }
+        .swiper-container-vertical > .swiper-wrapper {
+            -webkit-box-orient: vertical;
+            -moz-box-orient: vertical;
+            -ms-flex-direction: column;
+            -webkit-flex-direction: column;
+            flex-direction: column;
+        }
+        .swiper-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            display: -webkit-box;
+            display: -moz-box;
+            display: -ms-flexbox;
+            display: -webkit-flex;
+            display: flex;
+            -webkit-transition-property: -webkit-transform;
+            -moz-transition-property: -moz-transform;
+            -o-transition-property: -o-transform;
+            -ms-transition-property: -ms-transform;
+            transition-property: transform;
+            -webkit-box-sizing: content-box;
+            -moz-box-sizing: content-box;
+            box-sizing: content-box;
+            overflow:visible
+        }
+        .swiper-container-autoheight, .swiper-container-autoheight .swiper-slide {
+            height: auto;
+        }
+        .swiper-container-autoheight .swiper-wrapper {
+            -webkit-box-align: start;
+            -ms-flex-align: start;
+            -webkit-align-items: flex-start;
+            align-items: flex-start;
+            -webkit-transition-property: -webkit-transform, height;
+            -moz-transition-property: -moz-transform;
+            -o-transition-property: -o-transform;
+            -ms-transition-property: -ms-transform;
+            transition-property: transform, height;
+        }
+        .swiper-slide {
+            -webkit-flex-shrink: 0;
+            -ms-flex: 0 0 auto;
+            flex-shrink: 0;
+            width: 70vw;
+            height: 85vh;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            margin: 0 auto;
+        }
+        .swiper-container-autoheight, .swiper-container-autoheight .swiper-slide {
+            height: auto;
+        }
+        .swiper-image {
+            width: 50%;
+            height: 100%;
+        }
+        #loginOrRegistrationForm {
+            position: absolute;
+            top: 40vh;
+            left: 0;
+            width: 100%;
+        }
+        
+    </style>
     <title>Sugar</title>
 </head>
 <body>
-    <h1>Sugar!</h1>
-    <div id="loginOrRegistrationForm"></div>
+    <h1 class="title">SUGAR</h1>
+    <div class="page-wrap">
+        <div class="home-slider">
+            <div class="swiper-container">
+                <div class="swiper-wrapper">
+
+                    <div class="swiper-slide swiper-slide-one">
+                    <div class="swiper-image-inner-border" data-swiper-parallax-y="-300%"></div>
+                        <div class="swiper-image" data-swiper-parallax-y="20%">
+                            <div class="swiper-image-inner swiper-image-left swiper-image-one">
+                                <h1><span class="emphasis swiper-image-left-one-header">Dr. JONAS SALK</span> <br><span></span></h1>
+                                <p class="paragraph swiper-image-left-one">developed the vaccine for Polio<br>and reelased it free to the World.</p>
+                            </div>
+                        </div>
+                        <div class="swiper-image" data-swiper-parallax-y="-70%">
+                            <div class="swiper-image-inner swiper-image-right">
+                                <p class="paragraph swiper-image-right-one">
+                                <span class="other-quote line-one">edward r. murrow:</span><br>
+                                <span class="other-quote line-two">"who owns the patent on this vaccine?"</span><br>
+                                <span class="main-quote line-three">"Well, the people, I would say.</span><br>
+                                <span class="main-quote line-four">There is no patent.</span><br>
+                                <span class="main-quote line-five">Could you patent the Sun?</span><br>
+                              </p>
+                            </div>
+                          </div>
+                    </div>
+                    
+                    <div class="swiper-slide swiper-slide-two">
+                        <div class="swiper-image-inner-border-two" data-swiper-parallax-y="-300%"></div>
+                        <div class="swiper-image" data-swiper-parallax-y="20%">
+                            <div class="swiper-image-inner swiper-image-left swiper-image-two">
+                                <h1><span class="emphasis swiper-image-left-two-header">BILL GATES</span></h1>
+                                <p class="paragraph swiper-image-left-two">Philanthropist, co-founder of Microsoft<br>Billionare</p>
+                            </div>
+                        </div>
+                        <div class="swiper-image" data-swiper-parallax-y="-70%">
+                            <div class="swiper-image-inner swiper-image-right">
+                                <p class="paragraph swiper-image-right-two">
+                                <span class="main-quote line-one">"The most amazing philanthropists</span><br>
+                                <span class="main-quote line-two">are people who are actually making</span><br> 
+                                <span class="main-quote line-three">a significant sacrifice"</span>
+                              </p>
+                            </div>
+                          </div>
+                    </div>
+
+                    <div class="swiper-slide swiper-slide-three">
+                        <div class="swiper-image-inner-border-three" data-swiper-parallax-y="-800%"></div>
+                        <div class="swiper-image" data-swiper-parallax-y="20%">
+                            <div class="swiper-image-inner swiper-image-left swiper-image-three">
+                                <h1><span class="emphasis swiper-image-left-three-header">OPRAH WINFREY</span> <br><span></span></h1>
+                                <p class="paragraph swiper-image-left-one">Public-figure, Actress, Philanthropist</p>
+                            </div>
+                        </div>
+                        <div class="swiper-image" data-swiper-parallax-y="-70%">
+                            <div class="swiper-image-inner swiper-image-right">
+                                <p class="paragraph swiper-image-right-three">
+                                    <span class="main-quote line-six">"And you get a car!</span><br>
+                                    <span class="main-quote line-seven">And you get a car!</span><br> 
+                                    <span class="other-quote line-eight">Everybody gets a car!"</span>
+                              </p>
+                            </div>
+                          </div>
+                    </div>
+
+                    <div class="swiper-slide swiper-slide-four">
+                        <div id="loginOrRegistrationForm"></div>
+                    </div>
+                <div class="swiper-pagination"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+        <script src="https://unpkg.com/swiper/js/swiper.js"></script>
+        <script>
+            var mySwiper = new Swiper(".swiper-container", {
+                direction: "vertical",
+                speed: 1000,
+                parallax: true,
+                autoplay: false,
+                mousewheelControl: 1,
+                mousewheel: {
+                    invert: false,
+                },
+                grabCursor: false
+            });
+        </script>
 </body>
 </html>

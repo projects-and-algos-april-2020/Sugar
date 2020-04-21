@@ -27,14 +27,65 @@
         })
     })
 </script>
+<style>
+    :root {
+        --main-color: rgb(255,0,102);
+    }
+    .register-header > a {
+        color: var(--main-color);
+        font-size: 10rem;
+        font-weight: bold;
+        font-style: italic;
+        text-decoration: none;
+        transition: ease;
+    }
+    .register-header > a:hover {
+        color: bisque;
+    }
+    
+    #register-form-div {
+        display: flex;
+        align-content: flex-end;
+    }
+    .register-info {
+            text-align: left;
+            background-color: transparent;
+            border-style: none none solid none;
+            border-color: bisque;
+            border-width: 10px;
+            transition: 0.5s;
+            font-size: 20px;
+            color: var(--main-color);
+        }
+    .register-info:hover {
+            border-color: var(--main-color);
+        }
+    .register-info:focus {
+        outline: none;
+    }
+    #loginRequest {
+        color: var(--main-color);
+        font-size: 10rem;
+        font-weight: bold;
+        font-style: italic;
+        text-decoration: none;
+        position:relative;
+    }
+    .transform {
+        transition: transform 0.4s ease 0s, opacity 0.2s ease 0s;
+    }
+    .transform:hover  {
+        transform: translate(0px, -55px);
+    }
+</style>
 
-<h1>Register.</h1>
 <form action="/register_user" method="post" id="registrationForm">
-    <input type="text" name="email" placeholder="email" id=email>
-    <input type="text" name="username" placeholder="username">
-    <input type="text" name="password" placeholder="password">
-    <input type="text" name="confirm_password" placeholder="confirm password">
-    <a href="#" id="register">Submit.</a>
+    <h1 class="register-header"><a href="#" id="register">CREATE</a></h1>
+    <p><input class="register-info" type="text" name="email" placeholder="EMAIL" id=email>
+    <input class="register-info" type="text" name="username" placeholder="USERNAME"></p><br>
+    <p><input class="register-info" type="text" name="password" placeholder="PASSWORD">
+    <input class="register-info" type="text" name="confirm_password" placeholder="CONFIRM"></p><br>
 </form>
-<p><a href="#" id="loginRequest">existing neighbor.</a></p>
+<br>
+<p class="transform"><a href="#" id="loginRequest">BACK!</a></p>
 <div id="error_container"></div>

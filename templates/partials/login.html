@@ -26,12 +26,65 @@
         })
     })
 </script>
+<style>
+    :root {
+        --main-color: rgb(255,0,102);
+    }
+    .login-header > a {
+        color: var(--main-color);
+        font-size: 10rem;
+        font-weight: bold;
+        font-style: italic;
+        text-decoration: none;
+        transition: ease;
+    }
+    .login-header > a:hover {
+        color: bisque;
+    }
+    
+    #login-form-div {
+        display: flex;
+        align-content: flex-end;
+    }
+    .login-info {
+            text-align: left;
+            background-color: transparent;
+            border-style: none none solid none;
+            border-color: bisque;
+            border-width: 10px;
+            transition: 0.5s;
+            font-size: 20px;
+            color: var(--main-color);
+        }
+    .login-info:hover {
+            border-color: var(--main-color);
+        }
+    .login-info:focus {
+        outline: none;
+    }
+    #registerRequest {
+        color: var(--main-color);
+        font-size: 10rem;
+        font-weight: bold;
+        font-style: italic;
+        text-decoration: none;
+        position:relative;
+    }
+    .transform {
+        transition: transform 0.4s ease 0s, opacity 0.2s ease 0s;
+    }
+    .transform:hover  {
+        transform: translate(0px, -55px);
+    }
+</style>
 
-<h1>Login.</h1>
-<form action="#" method="post" id="loginForm">
-    <input type="text" name="username" placeholder="username">
-    <input type="text" name="password" placeholder="password">
-    <a href="#" id="login">Submit.</a>
-</form>
-<p><a href="#" id="registerRequest">new to Sugar?</a></p>
+<div id="login-form-div">
+    <form action="#" method="post" id="loginForm">
+        <h1 class="login-header"><a href="#" id="login">LOGIN</a></h1>
+        <p><input class="login-info username" type="text" name="username" placeholder=" USERNAME"></p><br>
+        <p><input class="login-info password" type="text" name="password" placeholder=" PASSWORD"></p><br>
+    </form>
+</div>
+<br>
+<p class="transform"><a href="#" id="registerRequest">NEW2SUGAR?</a></p>
 <div id="error_container"></div>

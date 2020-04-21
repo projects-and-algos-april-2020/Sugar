@@ -5,17 +5,246 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sugar</title>
 </head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        font-family: helvetica;
+    }
+    :root {
+        --main-color: rgb(255,0,102);
+        }
+    body {
+        background-color: black;
+        height: 100vh;
+        width: 100vw;
+        overflow: scroll;
+    }
+    .title {
+        position: absolute;
+        right: 3vw;
+        font-weight: bold;
+        font-style: italic;
+        color: var(--main-color);
+        font-size: 11em;
+        z-index: 0;
+        opacity: .5
+        }
+    .username {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        right: 3vw;
+        opacity: .5;
+    }
+    .username:hover {
+        opacity: 1;
+    }
+    #container {
+        perspective: 250px;
+        height: 100%;
+        width: 100%;
+        }
+    .nav-container {
+        display: flex;
+        align-content: center;
+        position: absolute;
+        top: 25vh;
+    }
+    .main-nav {
+        text-align: right;
+        display: inline-block;
+        position: relative;
+        left: -70vw;
+        top: 1vh;
+        line-height: 4.3em;
+    }
+    .nav-list-item {
+        color: var(--main-color);
+        font-style: italic;
+        font-size: 11rem;
+        text-decoration: none;
+        font-weight: bold;
+        transition-duration: 1s;
+    }
+
+    #inner {
+        background-image: url('static/images/background.jpg');
+        background-position: center center;
+        background-size: 100% auto;
+        position: absolute;
+        height: 100vh;
+        width: 100vw;
+        box-shadow: 2px 2px 50px rgba(0, 0, 0, 0.2);
+        transition: transform 0.5s;
+        -webkit-transition: transform 0.5s;
+        -moz-transition: transform 0.5s;
+        -o-transition: transform 0.5s;
+        z-index: -1;
+        }
+    .transform {
+        transition: transform 0.4s ease 0s, opacity 0.2s ease 0s;
+    }
+    .transform > a:hover {
+        color: bisque;
+    }
+    .t-one {
+        transition: transform 0.6s ease 0s, opacity 0.2s ease 0s;
+    }
+    .t-one:hover  {
+        transform: translate(110px, 0px);
+    }
+    .t-two:hover  {
+        transform: translate(1160px, 0px);
+    }
+    .t-three:hover  {
+        transform: translate(575px, 0px);
+    }
+    .t-four:hover  {
+        transform: translate(350px, 0px);
+    }
+    .requests_container {
+        position: absolute;
+        height: 100vh;
+        width: 50vw;
+        top: 0;
+        right: 0;
+        overflow: scroll;
+    }
+    .request-box {
+        height: 21vh;
+        width: 40vw;
+        margin-top: 3rem;
+        margin-bottom: 3rem;
+        overflow: scroll;
+    }
+    .request {
+        font-size: 3rem;
+        color: var(--main-color)
+    }
+    .request-username {
+        font-weight: bold;
+        font-style: italic;
+        font-size: 4rem;
+    }
+    .request-message {
+        margin-left: 3.5rem;
+    }
+    .request-border {
+        position: absolute;
+        height: 21vh;
+        width: 38vw;
+        border: 1px solid bisque;
+        z-index: -1;
+        left: 3rem;
+    }
+    div.requests_container > request-box span:nth-child(even) {
+        position: absolute;
+        height: 23vh;
+        width: 27vw;
+        border: 1px solid bisque;
+        z-index: -1;
+        top: 3rem;
+        left: 6rem;
+    }
+
+</style>
 <body>
-    <h1>{{ session.username }}</h1>
-    <p>profile picture placeholder</p>
-    <ul>
-        <li><a href="#">Home</a></li>
-        <li><a href="/request">Requests</a></li>
-        <li><a href="#">Messages</a></li>
-        <li><a href="#">Profile</a></li>
-    </ul>
-    <div id="requests_container">
-        <p>requests placeholder</p>
+    <div id="container">
+        <div id="inner"></div>
+        <h1 class="title">{{ session.username }}</h1>
+        <h1 class="title username">REQUESTS</h1>
+        <p class="profile-picture-placeholder"></p>
+        <div class="nav-container">
+            <ul class="main-nav">
+                <li class="transform t-one"><a class="nav-list-item" href="#">HOME</a></li>
+                <li class="transform t-two"><a class="nav-list-item" href="/request">MAKE A REQUEST</a></li>
+                <li class="transform t-three"><a class="nav-list-item" href="#">MESSAGES</a></li>
+                <li class="transform t-four"><a class="nav-list-item" href="#">PROFILE</a></li>
+            </ul>
+        </div>
+        <div class="requests_container">
+            {% for request in requests %}
+            <div class="request-box">
+                <span class="request-border"></span>
+                <p class="request request-username">{{request.user.username}}</p>
+                <p class="request request-item">{{request.item.name}}</p>
+                <p class="request request-message">{{request.message}}</p>
+            </div>
+            {% endfor %}
+        </div>
     </div>
+    <script>
+        (function() {
+        // Init
+        var container = document.getElementById("container"),
+            inner = document.getElementById("inner");
+
+        // Mouse
+        var mouse = {
+            _x: 0,
+            _y: 0,
+            x: 0,
+            y: 0,
+            updatePosition: function(event) {
+            var e = event || window.event;
+            this.x = e.clientX - this._x;
+            this.y = (e.clientY - this._y) * -1;
+            },
+            setOrigin: function(e) {
+            this._x = e.offsetLeft + Math.floor(e.offsetWidth / 2);
+            this._y = e.offsetTop + Math.floor(e.offsetHeight / 2);
+            },
+            show: function() {
+            return "(" + this.x + ", " + this.y + ")";
+            }
+        };
+
+        mouse.setOrigin(container);
+
+        var counter = 0;
+        var updateRate = 10;
+        var isTimeToUpdate = function() {
+            return counter++ % updateRate === 0;
+        };
+
+        var onMouseEnterHandler = function(event) {
+            update(event);
+        };
+
+        var onMouseLeaveHandler = function() {
+            inner.style = "";
+        };
+
+        var onMouseMoveHandler = function(event) {
+            if (isTimeToUpdate()) {
+            update(event);
+            }
+        };
+
+
+        var update = function(event) {
+            mouse.updatePosition(event);
+            updateTransformStyle(
+            (mouse.y / inner.offsetHeight / 2).toFixed(2),
+            (mouse.x / inner.offsetWidth / 2).toFixed(2)
+            );
+        };
+
+        var updateTransformStyle = function(x, y) {
+            var style = "rotateX(" + x + "deg) rotateY(" + y + "deg)";
+            inner.style.transform = style;
+            inner.style.webkitTransform = style;
+            inner.style.mozTransform = style;
+            inner.style.msTransform = style;
+            inner.style.oTransform = style;
+        };
+
+        container.onmouseenter = onMouseEnterHandler;
+        container.onmouseleave = onMouseLeaveHandler;
+        container.onmousemove = onMouseMoveHandler;
+        })();
+
+    </script>
 </body>
 </html>

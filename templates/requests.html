@@ -20,46 +20,228 @@
                     $('#form_container').html(res)
                 })
             })
+            $('#fulfill_request').click(function(){
+                var data = $('#fulfill-request-form-data').serialize()
+                console.log("HELLOEDJIEOWJHFIOEASJHFOIEhjo")
+                console.log(data)
+                $.ajax({
+                    method: "post",
+                    url: "/fulfill_request_form",
+                    data: data
+                })
+                .done(function(res){
+                    $('#fulfill-form').html(res)
+                })
+            })
         })
     </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background-color: black;
+        }
+        :root {
+        --main-color: rgb(255,0,102);
+        }
+        #container {
+            perspective: 250px;
+            height: 100%;
+            width: 100%;
+        }
+        #inner {
+            background-image: url('static/images/background.jpg');
+            background-position: center center;
+            background-size: 100% auto;
+            position: absolute;
+            height: 100vh;
+            width: 100vw;
+            box-shadow: 2px 2px 50px rgba(0, 0, 0, 0.2);
+            transition: transform 0.5s;
+            -webkit-transition: transform 0.5s;
+            -moz-transition: transform 0.5s;
+            -o-transition: transform 0.5s;
+            z-index: -1;
+        }
+        .title {
+            position: absolute;
+            right: 3vw;
+            font-weight: bold;
+            font-style: italic;
+            color: var(--main-color);
+            font-size: 11em;
+            z-index: 0;
+            opacity: .5
+        }
+        .nav-container {
+            display: flex;
+            align-content: center;
+            position: absolute;
+            top: 13vh;
+        }
+        .main-nav {
+            text-align: right;
+            display: inline-block;
+            position: relative;
+            top: 1vh;
+            line-height: 4.3em;
+            left: -10vw;
+        }
+        .nav-list-item {
+            font-family: helvetica;
+            color: var(--main-color);
+            font-style: italic;
+            font-size: 11rem;
+            text-decoration: none;
+            font-weight: bold;
+            transition-duration: 1s;
+        }
+        .transform {
+            transition: transform 0.4s ease 0s, opacity 0.2s ease 0s;
+        }
+        .transform > form > label > a:hover {
+            color: bisque;
+            transform: translate(110px, 0px);
+        }
+        .requests_container {
+            position: absolute;
+            height: 100vh;
+            width: 50vw;
+            top: 10vh;
+            right: 0;
+            overflow: scroll;
+        }
+
+
+    </style>
 </head>
 <body>
     <div id="container">
-        <h1>{{session.username}}</h1>
-        <p>profile picture placeholder</p>
-        <p>Request an Item</p>
-        <ul>
-            {% for category in categories%}
-            <li>
-            <form action="" method="post" class="categories">
-            <input type="hidden" name="category_id" value="{{category.id}}">
-            <label for="category_id"><a href="#" class="item_list">{{category.name}}</a></label>
-            </form>
-            </li>
-            {% endfor %}
-        </ul>
-        <div id="form_container">
-            <form action="" id="request_form" method="post">
-                <select>
-                    <option selected disabled>           </option>
-                </select>
-                <p><textarea name="" id="" cols="30" rows="3" placeholder="select a category!" style="resize:none"></textarea></p>
-                <p>Submit.</p>
-            </form>
-            <div id="error_container">
-            </div>
+        <div id="inner"></div>
+        <h1 class="title">{{session.username}}</h1>
+        <div class="nav-container">
+            <ul class="main-nav">
+                {% for category in categories%}
+                <li class="transform">
+                <form action="" method="post" class="categories">
+                <input type="hidden" name="category_id" value="{{category.id}}">
+                <label for="category_id">
+                    <a href="#" class="item_list nav-list-item">{{category.name}}</a>
+                </label>
+                </form>
+                </li>
+                {% endfor %}
+            </ul>
         </div>
         
+        <div class="requests_container">
+            <div id="form_container">
+                <form action="" id="request_form" method="post">
+                    <select>
+                        <option selected disabled>           </option>
+                    </select>
+                    <p><textarea name="" id="" cols="30" rows="3" placeholder="select a category!" style="resize:none"></textarea></p>
+                    <p>Submit.</p>
+                </form>
+                <div id="error_container">
+                </div>
+            </div>
+            
 
-        <div id="user_request_list">
-            <h1>your current requests!</h1>
-            {% for request in user_requests %}
-            <p>{{request.item.name}}</p>
-            <p>{{request.message}}</p>
-            <hr>
-            {% endfor %}
-        </div>
+            <div id="user_request_list">
+                <h1>your current requests!</h1>
+                {% for request in user_requests %}
+                <p>{{request.item.name}}</p>
+                <p>{{request.message}}</p>
+                <p><a href="#" class="delete_request" value={{request.id}}>delete</a></p>
+                <p>
+                    <form action="" id="fulfill-request-form-data">
+                        <input type="hidden" name="request_id" value="{{request.id}}">
+                        <a href="#" id="fulfill_request">complete</a>
+                    </form>
+                </p>
+                <div id="fulfill-form">
+
+                </div>
+                <hr>
+                {% endfor %}
+            </div>
+        </div>   
 
     </div>
+    <script>
+        (function() {
+        // Init
+        var container = document.getElementById("container"),
+            inner = document.getElementById("inner");
+
+        // Mouse
+        var mouse = {
+            _x: 0,
+            _y: 0,
+            x: 0,
+            y: 0,
+            updatePosition: function(event) {
+            var e = event || window.event;
+            this.x = e.clientX - this._x;
+            this.y = (e.clientY - this._y) * -1;
+            },
+            setOrigin: function(e) {
+            this._x = e.offsetLeft + Math.floor(e.offsetWidth / 2);
+            this._y = e.offsetTop + Math.floor(e.offsetHeight / 2);
+            },
+            show: function() {
+            return "(" + this.x + ", " + this.y + ")";
+            }
+        };
+
+        mouse.setOrigin(container);
+
+        var counter = 0;
+        var updateRate = 10;
+        var isTimeToUpdate = function() {
+            return counter++ % updateRate === 0;
+        };
+
+        var onMouseEnterHandler = function(event) {
+            update(event);
+        };
+
+        var onMouseLeaveHandler = function() {
+            inner.style = "";
+        };
+
+        var onMouseMoveHandler = function(event) {
+            if (isTimeToUpdate()) {
+            update(event);
+            }
+        };
+
+
+        var update = function(event) {
+            mouse.updatePosition(event);
+            updateTransformStyle(
+            (mouse.y / inner.offsetHeight / 2).toFixed(2),
+            (mouse.x / inner.offsetWidth / 2).toFixed(2)
+            );
+        };
+
+        var updateTransformStyle = function(x, y) {
+            var style = "rotateX(" + x + "deg) rotateY(" + y + "deg)";
+            inner.style.transform = style;
+            inner.style.webkitTransform = style;
+            inner.style.mozTransform = style;
+            inner.style.msTransform = style;
+            inner.style.oTransform = style;
+        };
+
+        container.onmouseenter = onMouseEnterHandler;
+        container.onmouseleave = onMouseLeaveHandler;
+        container.onmousemove = onMouseMoveHandler;
+        })();
+
+    </script>
 </body>
 </html>

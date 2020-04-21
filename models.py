@@ -124,6 +124,9 @@ class Requests(db.Model):
         if int(data["item_id"])<1:
             valid=False
             flash("an item must be selected to make request!")
+        if len(data["message"])>255:
+            valid=False
+            flash("message length must be under 255 characters!")
         return valid
     @classmethod
     def add_request(cls, data):
@@ -132,4 +135,37 @@ class Requests(db.Model):
             item_id=data["item_id"],
             message=data["message"])
         db.session.add(new_request)
+        db.session.commit()
+    @classmethod
+    def delete_request(cls, data):
+        pass
+
+class Fulfilled(db.Model):
+    __tablename__="fulfilled"
+    id=db.Column(db.Integer, primary_key=True)
+    requester_id=db.Column(db.Integer,
+        db.ForeignKey("users.id", ondelete="cascade"),
+        nullable=False)
+    fulfiller_id=db.Column(db.Integer,
+        db.ForeignKey("users.id", ondelete="cascade"),
+        nullable=False)
+    item_id = db.Column(db.Integer, 
+        db.ForeignKey("items.id", 
+        ondelete="cascade"), 
+        nullable=False)
+    item = db.relationship("Items",
+        foreign_keys=[item_id],
+        backref="fulfilled",
+        cascade="all")
+    message = db.Column(db.String(255))
+    created_at=db.Column(db.DateTime, server_default=func.now())
+    updated_at=db.Column(db.DateTime, server_default=func.now(), onupdate=func.now())
+    @classmethod
+    def add_fulfilled_request(cls, data):
+        new_fulfilled_request = cls(
+            requester_id=data["requester_id"],
+            fulfiller_id=data["fulfiller_id"],
+            item_id=data["item_id"],
+            message=data["message"])
+        db.session.add(new_fulfilled_request)
         db.session.commit()

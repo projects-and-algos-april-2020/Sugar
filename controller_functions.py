@@ -1,6 +1,7 @@
 from flask import render_template, redirect, request, session, flash, session
 from config import db, bcrypt, migrate
-from models import Users, Categories, Items, Requests
+from models import Users, Categories, Items, Requests, Fulfilled
+from sqlalchemy import desc
 
 def index():
     return render_template('index.html')
@@ -33,7 +34,9 @@ def loginUser():
         return "success"
 
 def dashboard():
-    return render_template('dashboard.html')
+    requests = Requests.query.join(Requests.item).join(Requests.user).order_by(Requests.id.desc()).all()
+    print(requests)
+    return render_template('dashboard.html', requests=requests)
 
 def item_list():
     category = request.form['category']
@@ -59,3 +62,14 @@ def create_request():
 
 def user_request_list():
     return render_template('partials/user_request_list.html')
+
+def fulfill_request_form():
+    print(request.form)
+    users_list = Users.query.all()
+    user_request = Requests.query.filter_by(id=request.form["request_id"]).first()
+    return render_template('partials/fulfill_request.html', users_list=users_list, user_request=user_request)
+
+def add_fulfilled():
+    print(request.form)
+    Fulfilled.add_fulfilled_request(request.form)
+    return redirect('/request')
